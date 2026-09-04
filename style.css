@@ -1,0 +1,550 @@
+/* ============================================================
+   PROJECT MOONLIGHT — STYLES
+   Palette:  void #0a0612 · panel #160b26 · violet #5b2f8c
+             gold #c9a24d · gold-bright #e8cc85 · text #f2ecf9
+             text-muted #a794c2
+   Type:     Display  — 'Cinzel'            (celestial, restrained caps)
+             Body     — 'Jost'              (clean geometric sans)
+             Accent   — 'Cormorant Garamond' italic (letter, quotes)
+             Mono     — 'JetBrains Mono'    (terminal)
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;1,500;1,600&family=Jost:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --void: #07040b;
+  --void-deep: #030207;
+  --midnight: #10091b;
+  --panel: #160b26;
+  --panel-light: #21122e;
+  --violet: #5b2f8c;
+  --violet-soft: #3a1f5c;
+  --gold: #c9a24d;
+  --gold-bright: #e8cc85;
+  --text: #f2ecf9;
+  --text-muted: #a794c2;
+  --line: rgba(201, 162, 77, 0.25);
+
+  --font-display: 'Cinzel', serif;
+  --font-body: 'Jost', sans-serif;
+  --font-accent: 'Cormorant Garamond', serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--void);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 300;
+  overflow-x: hidden;
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+button:focus-visible, input:focus-visible, .tap:focus-visible {
+  outline: 2px solid var(--gold-bright);
+  outline-offset: 3px;
+}
+
+::selection { background: var(--violet); color: var(--gold-bright); }
+
+/* ---------- Shared layout ---------- */
+.screen {
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8vh 6vw;
+  position: relative;
+  text-align: center;
+}
+
+.hidden { display: none !important; }
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.8;
+  margin-bottom: 1.2rem;
+}
+
+.title-xl {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.8rem, 7vw, 3.2rem);
+  letter-spacing: 0.04em;
+  line-height: 1.25;
+  color: var(--text);
+}
+
+.title-xl .gold { color: var(--gold-bright); }
+
+.subtext {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-size: clamp(1rem, 3.6vw, 1.3rem);
+  color: var(--text-muted);
+  max-width: 32em;
+  margin-top: 1.2rem;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--void);
+  background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+  border: none;
+  padding: 1rem 2.2rem;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
+  box-shadow: 0 0 0 rgba(201,162,77,0);
+  min-height: 48px;
+}
+.btn:hover, .btn:active { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(201,162,77,0.35); }
+
+.btn-ghost {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+  background: transparent;
+  border: 1px solid var(--line);
+  padding: 0.85rem 1.8rem;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: border-color 0.3s var(--ease), background 0.3s var(--ease);
+  min-height: 48px;
+}
+.btn-ghost:hover { border-color: var(--gold); background: rgba(201,162,77,0.08); }
+
+/* ================= GLOBAL MOONLIGHT ATMOSPHERE ================= */
+/* One shared decorative layer behind every screen — never rebuilt
+   per-phase, so it feels like a continuous night sky throughout. */
+#moonlight-atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 12%,
+      rgba(91,47,140,.22) 0%,
+      rgba(16,9,27,.45) 28%,
+      rgba(3,2,7,0) 62%),
+    var(--void);
+}
+#falling-stars, #shooting-stars {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.moon-glow {
+  position: absolute;
+  width: min(70vw, 520px);
+  aspect-ratio: 1;
+  top: -18%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(232,204,133,.16) 0%,
+    rgba(138,95,196,.09) 25%,
+    rgba(0,0,0,0) 68%);
+  filter: blur(4px);
+  transition: opacity 1.4s ease;
+}
+.moon-disc {
+  position: absolute;
+  width: min(16vw, 120px);
+  aspect-ratio: 1;
+  top: 7%;
+  right: 10%;
+  border-radius: 50%;
+  opacity: .18;
+  background: radial-gradient(circle at 35% 30%,
+    #f5e6b0 0%,
+    #c9a24d 45%,
+    rgba(201,162,77,.1) 72%,
+    transparent 73%);
+  box-shadow: 0 0 70px rgba(232,204,133,.14);
+}
+.cosmic-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,.42) 100%);
+}
+/* Screens sit above the atmosphere; panels/content sit above screens. */
+.screen { z-index: 2; }
+.content, .terminal-window { position: relative; z-index: 3; }
+#confetti-canvas, #fireworks-canvas { z-index: 4; }
+
+/* ================= PHASE 3 — LANDING ================= */
+#landing::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 88%, rgba(201,162,77,0.10) 0%, transparent 55%);
+  z-index: 0;
+  pointer-events: none;
+}
+#landing .content { position: relative; z-index: 2; }
+#landing .loading {
+  margin-top: 2.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.15em;
+  min-height: 1.4em;
+}
+.fade-out { animation: fadeOut 0.9s var(--ease) forwards; }
+.fade-in { animation: fadeIn 0.9s var(--ease) forwards; }
+@keyframes fadeOut { to { opacity: 0; transform: scale(0.98); } }
+@keyframes fadeIn { from { opacity: 0; transform: scale(1.01); } to { opacity: 1; transform: scale(1); } }
+
+/* ================= PHASE 4 — UNLOCK ================= */
+#unlock .unlock-box { margin-top: 2rem; width: 100%; max-width: 380px; display: flex; flex-direction: column; gap: 1rem; align-items: center; }
+#unlock input[type="text"] {
+  width: 100%;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 2px;
+  text-align: center;
+}
+#unlock input[type="text"]::placeholder { color: var(--text-muted); opacity: 0.6; }
+.unlock-error { color: #d98a8a; font-size: 0.8rem; font-family: var(--font-mono); min-height: 1.2em; }
+
+/* ================= PHASE 5 — HUB ================= */
+#hub { justify-content: flex-start; padding-top: 12vh; }
+.hub-grid {
+  margin-top: 2.5rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  width: 100%;
+  max-width: 440px;
+}
+.hub-card {
+  position: relative;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 1.3rem 1.4rem;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.3s var(--ease), transform 0.3s var(--ease);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.hub-card:hover { border-color: var(--gold); transform: translateX(3px); }
+.hub-card.locked { opacity: 0.45; cursor: not-allowed; }
+.hub-card.locked:hover { transform: none; border-color: var(--line); }
+.hub-card.complete { border-color: var(--gold); }
+.hub-card .label { font-family: var(--font-display); font-size: 1rem; letter-spacing: 0.03em; }
+.hub-card .label::before { content: '☾'; color: var(--gold); margin-right: 0.5rem; opacity: 0.7; }
+.hub-card .status { font-family: var(--font-mono); font-size: 0.65rem; color: var(--gold); letter-spacing: 0.1em; }
+.hub-card.locked .status { color: var(--text-muted); }
+.hub-progress { margin-top: 2rem; font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.15em; }
+.hub-progress-bar { margin-top: 0.6rem; width: 100%; max-width: 260px; height: 3px; background: var(--line); border-radius: 2px; overflow: hidden; margin-left: auto; margin-right: auto; }
+.hub-progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-bright)); transition: width 0.5s var(--ease); }
+
+/* ================= GAME SCREENS (Phases 6-9) ================= */
+.game-area {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  height: 55vh;
+  min-height: 320px;
+  margin-top: 2rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.floating-item {
+  position: absolute;
+  font-size: 1.6rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s var(--ease);
+  filter: grayscale(0.2);
+}
+.floating-item:active { transform: scale(1.3); }
+.floating-item.heart-target { filter: none; }
+
+.catch-btn {
+  position: absolute;
+  transition: top 0.25s var(--ease), left 0.25s var(--ease);
+}
+
+.memory-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 0.5rem;
+  width: 100%;
+  height: 100%;
+  padding: 0.8rem;
+}
+.memory-card {
+  background: var(--violet-soft);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(1.1rem, 5vw, 1.6rem);
+  cursor: pointer;
+  transition: transform 0.25s var(--ease), background 0.25s var(--ease);
+  width: 100%;
+  height: 100%;
+}
+.memory-card.flipped { background: var(--panel-light); }
+.memory-card.matched { background: transparent; border-color: var(--gold); opacity: 0.5; cursor: default; }
+
+.guess-options { display: flex; flex-direction: column; gap: 0.7rem; margin-top: 1.5rem; width: 100%; max-width: 380px; }
+
+.game-feedback { margin-top: 1.2rem; font-family: var(--font-accent); font-style: italic; color: var(--gold-bright); min-height: 1.4em; }
+
+/* ================= PHASE 10 — GALLERY ================= */
+#gallery { padding-top: 8vh; }
+.gallery-viewport {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  aspect-ratio: 4/5;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--panel);
+  border: 1px solid var(--line);
+}
+.gallery-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+}
+.gallery-photo.active { opacity: 1; }
+.gallery-caption-bar {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: linear-gradient(to top, rgba(5,3,8,0.92), transparent);
+  padding: 2.2rem 1.2rem 1.2rem;
+  text-align: left;
+}
+.gallery-caption { font-family: var(--font-accent); font-style: italic; font-size: 1.05rem; color: var(--text); }
+.gallery-counter { font-family: var(--font-mono); font-size: 0.65rem; color: var(--gold); letter-spacing: 0.15em; margin-top: 0.4rem; }
+.gallery-nav { display: flex; justify-content: space-between; width: 100%; max-width: 420px; margin-top: 1rem; }
+.gallery-photo-missing { display:flex; align-items:center; justify-content:center; height:100%; font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); text-align:center; padding: 1rem; }
+
+
+/* ================= PHASE 12 — ADMIRE ================= */
+.admire-item { font-family: var(--font-display); font-size: clamp(1.1rem, 4.5vw, 1.6rem); color: var(--gold-bright); min-height: 3em; display:flex; align-items:center; }
+.admire-counter { font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted); letter-spacing: 0.15em; margin-top: 1.5rem; }
+
+/* ================= PHASE 13 — LETTER ================= */
+.letter-paper {
+  width: 100%;
+  max-width: 480px;
+  background: linear-gradient(180deg, #1c0f2e, #150a24);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 2.4rem 1.8rem;
+  text-align: left;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+.letter-text {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-size: clamp(1rem, 4vw, 1.15rem);
+  color: var(--gold-bright);
+  white-space: pre-wrap;
+  line-height: 1.85;
+}
+.letter-cursor { display: inline-block; width: 2px; background: var(--gold-bright); animation: blink 0.9s step-end infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ================= PHASE 14 — TERMINAL ================= */
+#terminal-screen {
+  align-items: stretch;
+  justify-content: flex-start;
+  padding: 6vh 5vw;
+}
+.terminal-window {
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  background: #08050c;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 0 60px rgba(91,47,140,0.25);
+}
+.terminal-bar { display:flex; gap:6px; padding: 0.7rem 0.9rem; background: #0f0918; }
+.terminal-dot { width: 10px; height: 10px; border-radius: 50%; background: #4a3a5c; }
+.terminal-body {
+  padding: 1.2rem 1.1rem 1.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: #b9f0c9;
+  text-align: left;
+  min-height: 40vh;
+  line-height: 1.9;
+  white-space: pre-wrap;
+}
+.terminal-line-gold { color: var(--gold-bright); }
+.terminal-input-row { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.6rem; }
+.terminal-prompt { color: var(--gold); }
+#terminal-input {
+  background: transparent;
+  border: none;
+  color: #b9f0c9;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  flex: 1;
+  outline: none;
+}
+
+/* ================= PHASE 15/16 — PARTICLE HEART + TRANSITION ================= */
+#heart-scene { padding: 0; }
+#heart-scene::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: radial-gradient(circle at 50% 50%, rgba(232,204,133,0.10) 0%, rgba(91,47,140,0.08) 32%, transparent 65%);
+  pointer-events: none;
+}
+#heart-canvas-wrap { position: absolute; inset: 0; z-index: 1; }
+#heart-scene .content { position: relative; z-index: 2; pointer-events: none; }
+#heart-scene .title-xl { pointer-events: none; }
+
+/* ================= PHASE 17/18 — GRAND FINALE ================= */
+#finale{overflow:hidden;background:#020203;isolation:isolate}
+#finale-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1}
+.finale-vignette{position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(circle at center,transparent 8%,rgba(0,0,0,.16) 48%,rgba(0,0,0,.82) 100%),linear-gradient(to bottom,rgba(0,0,0,.25),transparent 25%,transparent 72%,rgba(0,0,0,.45))}
+#finale .finale-content{position:relative;z-index:5;width:min(1180px,94vw);min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4vh 2vw 8vh;box-sizing:border-box;opacity:0;transform:scale(.84) translateY(25px);transition:1.35s cubic-bezier(.2,.8,.2,1)}
+#finale .finale-content.show{opacity:1;transform:none}
+.finale-kicker{color:#f3dda9;font-family:var(--font-mono);letter-spacing:.34em;font-size:.72rem;margin-bottom:.5rem;text-shadow:0 0 20px rgba(243,221,169,.8)}
+.final-crown{font-size:clamp(2rem,8vw,4rem);line-height:.8;color:#f3dda9;text-shadow:0 0 30px rgba(243,221,169,.9);animation:finalCrown 1.8s ease-in-out infinite}
+.final-heart{font-size:clamp(4rem,9vw,7rem);line-height:.95;color:#f3dda9;text-shadow:0 0 55px rgba(243,221,169,.95);animation:finalHeart 1.45s ease-in-out infinite}
+.finale-line{opacity:0;transform:translateY(18px) scale(.95);transition:opacity 1s ease,transform 1s ease;color:#f3dda9;text-shadow:0 0 28px rgba(243,221,169,.38)}
+.finale-line.show{opacity:1;transform:none}
+.finale-happy{font-family:var(--font-mono);letter-spacing:.42em;font-size:.85rem}
+.finale-name-gold{font-family:var(--font-display);font-weight:700;font-size:clamp(3rem,12vw,7.2rem);color:#f3dda9}
+.finale-subtitle{font-family:var(--font-accent);font-style:italic;font-size:clamp(1rem,4vw,1.5rem)}
+.finale-title{font-family:var(--font-display);font-size:clamp(1.1rem,4.5vw,1.85rem);letter-spacing:.1em}
+#finale-message{margin-top:1.3rem;max-width:760px;white-space:pre-line;color:#f3dda9;opacity:0;transform:translateY(15px);transition:opacity 1.2s ease,transform 1.2s ease;line-height:1.7;font-size:clamp(1rem,2.4vw,1.2rem)}
+#finale-message.show{opacity:1;transform:none}
+/* Exactly TWO large finale image spaces */
+.finale-photos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(.8rem,2.2vw,1.6rem);width:min(900px,90vw);margin-top:1.7rem;opacity:0;transform:translateY(35px) scale(.9);transition:opacity 1.3s ease,transform 1.3s ease}
+.finale-photos.show{opacity:1;transform:none}
+.finale-photos figure{margin:0;min-width:0}
+.finale-photos img{display:block;width:100%;height:min(34vh,360px);object-fit:cover;border-radius:12px;border:1px solid rgba(243,221,169,.8);box-shadow:0 0 50px rgba(215,181,110,.3),0 22px 80px rgba(0,0,0,.7);transition:.5s}
+.finale-photos img:hover{transform:scale(1.025);box-shadow:0 0 70px rgba(243,221,169,.4),0 28px 90px rgba(0,0,0,.8)}
+.finale-photos figcaption{margin-top:.7rem;color:#f3dda9;font-family:var(--font-accent);font-style:italic;font-size:.9rem;line-height:1.4;text-shadow:0 0 14px rgba(243,221,169,.3)}
+.replay-row{margin-top:1.8rem}
+.finale-hint{position:absolute;bottom:4vh;left:0;right:0;z-index:6;text-align:center;color:#f3dda9;font-family:var(--font-mono);letter-spacing:.3em;font-size:.65rem;transition:opacity .7s}.finale-hint.hide{opacity:0}
+@keyframes finalHeart{50%{transform:scale(1.12);text-shadow:0 0 85px rgba(243,221,169,1)}}
+@keyframes finalCrown{50%{transform:translateY(-5px) rotate(4deg);opacity:.65}}
+@media(max-width:650px){#finale .finale-content{padding:3vh 3vw 9vh}.finale-photos{width:94vw;gap:.55rem}.finale-photos img{height:27vh;border-radius:8px}.finale-photos figcaption{font-size:.68rem}.finale-name-gold{font-size:clamp(2.8rem,16vw,5rem)}.finale-title{font-size:.9rem}.finale-happy{font-size:.68rem;letter-spacing:.25em}}
+/* ================= PHASE 19 — SECRET EGG ================= */
+.footer-mark {
+  position: fixed;
+  bottom: 14px;
+  right: 16px;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: rgba(201,162,77,0.35);
+  letter-spacing: 0.15em;
+  cursor: pointer;
+  z-index: 50;
+  user-select: none;
+  padding: 6px 8px;
+}
+#secret-modal {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(5,3,8,0.92);
+  display: flex; align-items: center; justify-content: center;
+  padding: 6vh 6vw;
+}
+.secret-card {
+  max-width: 460px;
+  background: var(--panel);
+  border: 1px solid var(--gold);
+  border-radius: 6px;
+  padding: 2rem 1.6rem;
+  text-align: left;
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-size: 1.05rem;
+  white-space: pre-wrap;
+  line-height: 1.8;
+  box-shadow: 0 0 80px rgba(201,162,77,0.15);
+}
+
+/* ================= PHASE 20 — AUDIO CONTROL ================= */
+#audio-toggle {
+  position: fixed;
+  top: 14px;
+  right: 16px;
+  z-index: 50;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(22,11,38,0.7);
+  border: 1px solid var(--line);
+  color: var(--gold-bright);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------- Fine print / progress dots ---------- */
+.dots { display:flex; gap:6px; margin-top: 1.4rem; }
+.dot { width:6px; height:6px; border-radius:50%; background: var(--line); }
+.dot.on { background: var(--gold); }
+
+@media (min-width: 640px) {
+  .hub-grid { grid-template-columns: 1fr 1fr; }
+  .memory-grid { grid-template-columns: repeat(4, 1fr); }
+}
+

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover" />
+<title>Project Moonlight</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ================= GLOBAL MOONLIGHT ATMOSPHERE =================
+     One shared decorative layer behind every screen: moon glow, a
+     distant moon disc, a persistent falling-star canvas, an
+     occasional shooting-star canvas, and a soft vignette. Fixed,
+     pointer-events:none, and never rebuilt per-screen. ============= -->
+<div id="moonlight-atmosphere" aria-hidden="true">
+  <div class="moon-glow"></div>
+  <div class="moon-disc"></div>
+  <canvas id="falling-stars"></canvas>
+  <canvas id="shooting-stars"></canvas>
+  <div class="cosmic-vignette"></div>
+</div>
+
+<button id="audio-toggle" aria-label="Toggle music">🔇</button>
+<div class="footer-mark" id="secret-trigger">🌙</div>
+
+<!-- ================= PHASE 3 — LANDING ================= -->
+<section id="landing" class="screen">
+  <div class="content">
+    <div class="eyebrow">Project Moonlight</div>
+    <h1 class="title-xl">Something has been<br />waiting for you<span class="gold">.</span></h1>
+    <p class="subtext">A small experience, made just for you.</p>
+    <div style="margin-top:2.4rem;">
+      <button class="btn" id="enter-btn">Enter the Experience</button>
+    </div>
+    <div class="loading hidden" id="loading-text"></div>
+  </div>
+</section>
+
+<!-- ================= PHASE 4 — UNLOCK ================= -->
+<section id="unlock" class="screen hidden">
+  <div class="content">
+    <div class="eyebrow">Identity Check</div>
+    <h1 class="title-xl" id="unlock-question"></h1>
+    <div class="unlock-box">
+      <input type="text" id="unlock-input" placeholder="Type your answer..." autocomplete="off" />
+      <button class="btn" id="unlock-submit">Unlock</button>
+      <div class="unlock-error" id="unlock-error"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PHASE 5 — HUB ================= -->
+<section id="hub" class="screen hidden">
+  <div class="content" style="width:100%;">
+    <div class="eyebrow">Experience Hub</div>
+    <h1 class="title-xl">Choose where<br />to begin<span class="gold">.</span></h1>
+    <div class="hub-grid" id="hub-grid"></div>
+    <div class="hub-progress" id="hub-progress">0 / 0 UNLOCKED</div>
+    <div class="hub-progress-bar"><div class="hub-progress-bar-fill" id="hub-progress-fill" style="width:0%;"></div></div>
+  </div>
+</section>
+
+<!-- ================= PHASE 6 — FIND THE HEART ================= -->
+<section id="game-heart" class="screen hidden">
+  <div class="content" style="width:100%;">
+    <div class="eyebrow">Mini Game · 01</div>
+    <h1 class="title-xl">Find the heart<br />among them.</h1>
+    <div class="game-area" id="heart-game-area"></div>
+    <div class="game-feedback" id="heart-feedback"></div>
+    <button class="btn-ghost hidden" id="heart-continue" style="margin-top:1rem;">Continue</button>
+  </div>
+</section>
+
+<!-- ================= PHASE 7 — CATCH THE BUTTON ================= -->
+<section id="game-catch" class="screen hidden">
+  <div class="content" style="width:100%;">
+    <div class="eyebrow">Mini Game · 02</div>
+    <h1 class="title-xl">Okay, click me<br />if you can.</h1>
+    <div class="game-area" id="catch-game-area">
+      <button class="btn catch-btn" id="catch-button">Click me</button>
+    </div>
+    <div class="game-feedback" id="catch-feedback"></div>
+    <button class="btn-ghost hidden" id="catch-continue" style="margin-top:1rem;">Continue</button>
+  </div>
+</section>
+
+<!-- ================= PHASE 8 — MEMORY MATCH ================= -->
+<section id="game-match" class="screen hidden">
+  <div class="content" style="width:100%;">
+    <div class="eyebrow">Mini Game · 03</div>
+    <h1 class="title-xl">Memory Match</h1>
+    <div class="game-area" id="match-game-area">
+      <div class="memory-grid" id="match-grid"></div>
+    </div>
+    <div class="game-feedback" id="match-feedback"></div>
+    <button class="btn-ghost hidden" id="match-continue" style="margin-top:1rem;">Continue</button>
+  </div>
+</section>
+
+<!-- ================= PHASE 9 — GUESSING GAME ================= -->
+<section id="game-guess" class="screen hidden">
+  <div class="content" style="width:100%;">
+    <div class="eyebrow">Mini Game · 04</div>
+    <h1 class="title-xl" id="guess-question">Question</h1>
+    <div class="guess-options" id="guess-options"></div>
+    <div class="game-feedback" id="guess-feedback"></div>
+    <button class="btn-ghost hidden" id="guess-continue" style="margin-top:1rem;">Continue</button>
+  </div>
+</section>
+
+<!-- ================= PHASE 10 — GALLERY ================= -->
+<section id="gallery" class="screen hidden">
+  <div class="content" style="width:100%;">
+    <div class="eyebrow">Memory Gallery</div>
+    <div class="gallery-viewport" id="gallery-viewport"></div>
+    <div class="gallery-nav">
+      <button class="btn-ghost" id="gallery-prev">← Prev</button>
+      <button class="btn-ghost" id="gallery-next">Next →</button>
+    </div>
+    <button class="btn" id="gallery-done" style="margin-top:1.6rem;">Continue</button>
+  </div>
+</section>
+
+
+<!-- ================= PHASE 12 — ADMIRE ================= -->
+<section id="admire" class="screen hidden">
+  <div class="content">
+    <div class="eyebrow">Things I Admire About You</div>
+    <div class="admire-item" id="admire-text"></div>
+    <div class="admire-counter" id="admire-counter"></div>
+    <button class="btn" id="admire-next" style="margin-top:2rem;">Next</button>
+  </div>
+</section>
+
+<!-- ================= PHASE 13 — LETTER ================= -->
+<section id="letter" class="screen hidden">
+  <div class="content" style="width:100%;">
+    <div class="eyebrow">A Letter, Just For You</div>
+    <div class="letter-paper" style="margin-top:1.6rem;">
+      <div class="letter-text" id="letter-text"></div>
+    </div>
+    <button class="btn hidden" id="letter-continue" style="margin-top:2rem;">But I'm not done yet…</button>
+  </div>
+</section>
+
+<!-- ================= PHASE 14 — TERMINAL ================= -->
+<section id="terminal-screen" class="screen hidden">
+  <div class="terminal-window">
+    <div class="terminal-bar"><div class="terminal-dot"></div><div class="terminal-dot"></div><div class="terminal-dot"></div></div>
+    <div class="terminal-body" id="terminal-body"></div>
+    <div class="terminal-input-row" style="padding: 0 1.1rem 1.2rem;">
+      <span class="terminal-prompt">$</span>
+      <input id="terminal-input" type="text" autocomplete="off" placeholder="type a command..." />
+    </div>
+  </div>
+</section>
+
+<!-- ================= PHASE 15/16 — PARTICLE HEART ================= -->
+<section id="heart-scene" class="screen hidden">
+  <div id="heart-canvas-wrap"></div>
+  <div class="content">
+    <h1 class="title-xl hidden" id="heart-name-reveal"></h1>
+  </div>
+</section>
+
+<!-- ================= PHASE 17/18 — FINALE ================= -->
+<section id="finale" class="screen hidden">
+  <canvas id="finale-canvas"></canvas>
+  <div class="finale-vignette"></div>
+  <div class="content finale-content" id="finale-content">
+    <div class="finale-kicker">✦ THE GRAND FINALE ✦</div>
+    <div class="final-crown">✦</div>
+    <div class="final-heart">♡</div>
+    <div class="finale-line finale-happy" id="finale-happy">HAPPY BIRTHDAY</div>
+    <div class="finale-line finale-name-gold" id="finale-name-gold"></div>
+    <div class="finale-line finale-subtitle" id="finale-subtitle">the one we called...</div>
+    <div class="finale-line finale-title" id="finale-title">ANCESTOR OF THE GUIDANCE MOON</div>
+    <div class="finale-message subtext" id="finale-message"></div>
+    <div class="finale-photos" id="finale-photos" aria-label="Two beautiful memories">
+      <figure><img src="photo1.jpg" alt="Beautiful memory"><figcaption>A beauty that speaks softly, shines naturally, and leaves a memory long after the moment is gone.</figcaption></figure>
+      <figure><img src="photo2.jpg" alt="Beautiful memory"><figcaption>Beauty in a moment — graceful, radiant, and effortlessly unforgettable.</figcaption></figure>
+    </div>
+    <div class="replay-row">
+      <button class="btn-ghost" id="replay-btn">☾ Return to the Beginning</button>
+    </div>
+  </div>
+  <div class="finale-hint" id="finale-hint">GET READY…</div>
+</section>
+
+<!-- ================= PHASE 19 — SECRET MODAL ================= -->
+<div id="secret-modal" class="hidden">
+  <div class="secret-card" id="secret-text"></div>
+</div>
+
+<audio id="bg-music" loop preload="none"></audio>
+<audio id="voice-audio" preload="none"></audio>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
