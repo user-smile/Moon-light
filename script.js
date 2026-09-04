@@ -69,7 +69,7 @@ const CONFIG = {
     }
   ],
 
-  letter: `To nimatullah the one we called okay when I made that if you want Ancestor of the Guidance Moon 🌙,
+  letter: `To nimatullah the one we called Ancestor of the Guidance Moon 🌙,
 
 There are some people you meet and somehow, without doing anything extraordinary, they leave an impression.
 
